@@ -72,7 +72,7 @@ function createFactsList(dataArray) {
     ${fact.text}
     <a class="source" href="${fact.source}" target="_blank">(Source)</a> 
     </p>
-    <span class="tag" style="background-color: #3b82f6">${fact.category}</span>
+    <span class="tag" style="background-color: ${CATEGORIES.find((cat) => cat.name === fact.category).color}">${fact.category}</span>
     </li>`);
     console.log(htmlArr);
     const html = htmlArr.join("");
@@ -91,10 +91,5 @@ btn.addEventListener("click", function() {
         btn.textContent = "Share a fact";
     }
 });
-
-
-
-
-
 
 
