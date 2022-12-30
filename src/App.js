@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./style.css";
 
 
@@ -35,21 +36,31 @@ const initialFacts = [
   },
 ];
 
-function App() {
+function Counter() {
 
-  const appTitle = "Today I Learned";
+  const [count, setCount] = useState(0);
+
+  return (
+  <div>
+    <span style={{fontSize: '40px'}}>{count}</span>
+    <button className="btn btn-large" onClick={() => setCount((c) => c+1)}>+1</button>
+  </div>
+  );
+}
+
+
+function App() {
+  // 1.define state var
+  const [showForm, setShowForm] = useState(false);
+
   return (    
   <>
-  {/* HEADER */}
-  <header className="header">
-  <div className="logo">
-      <img src="logo.png" width="68" height="68" alt="Logo"/>
-      <h1>{appTitle}</h1>
-  </div>
-  <button className="btn btn-large btn-open">SHARE A FACT</button>
-</header>
+  <Header showForm={showForm} setShowForm={setShowForm} />
+  
 
-<NewFactForm />
+{/* 2.use state var */}
+{showForm ? <NewFactForm />: null}
+
 
 <main className="main">
 <CategoryFilter />
@@ -59,8 +70,20 @@ function App() {
 );
 }
 
-function NewFactForm() {
-  return <form className="fact-form">Fact form</form>
+function Header({showForm, setShowForm}) {
+  const appTitle = "Today I Learned";
+
+  return (
+  <header className="header">
+  <div className="logo">
+      <img src="logo.png" width="68" height="68" alt="Logo"/>
+      <h1>{appTitle}</h1>
+  </div>
+  <button className="btn btn-large btn-open" 
+  // 3.update state var
+  onClick={()=>setShowForm((show) => !show)}>{showForm ? "Close" : "SHARE A FACT"}</button>
+</header>
+  );
 }
 
 const CATEGORIES = [
@@ -73,6 +96,31 @@ const CATEGORIES = [
   { name: "history", color: "#f97316" },
   { name: "news", color: "#8b5cf6" },
 ];
+
+function NewFactForm() {
+  const [text, setText] = useState("");
+  const [source, setSource] = useState("");
+  const [category, setCategory] = useState("");
+
+  return (
+  <form className="fact-form">
+  <input type="text" placeholder="Share a fact with the world..." 
+    value={text}
+    onChange={(e) => setText(e.target.value)}
+  />
+  <span>200</span>
+  <input type="source" placeholder="Trustworthy spurce..."  onChange={(e)=>setSource(e.target.value)} />
+  <select value={category} onChange={(e)=>setCategory(e.target.value)}>
+      <option value="">Choose Category:</option>
+      {CATEGORIES.map((cat) =>( 
+        <option key={cat.name} value={cat.name}>{cat.name.toUpperCase()}
+        </option>
+        ))}
+  </select>
+  <button className="btn btn-large">POST</button></form>
+  );
+}
+
 
 /**
  * 
