@@ -89,7 +89,7 @@ if(!error) setFacts(facts);
 
 <main className="main">
 <CategoryFilter setCurrentCategory={setCurrentCategory} />
-  {isLoading ? <Loader /> : <FactList facts={facts}/> }
+  {isLoading ? <Loader /> : <FactList facts={facts} setFacts={setFacts} /> }
 </main>
 </>
 );
@@ -230,7 +230,7 @@ function CategoryFilter({setCurrentCategory}) {
   );
 }
 
-function FactList({facts}) {
+function FactList({facts, setFacts}) {
 
   if(facts.length === 0) {
     return (<p className="message">No facts for this category yet! Creat the first one 👻👻👻</p>
@@ -241,7 +241,7 @@ function FactList({facts}) {
   <section>
   <ul className="facts-list">
    {facts.map((fact)=> (
-      <Fact key={fact.id} fact={fact} />
+      <Fact key={fact.id} fact={fact} setFacts={setFacts} />
       ))}
   </ul>
   </section>
@@ -250,11 +250,16 @@ function FactList({facts}) {
 
 
 
-function Fact({ fact }) {
+function Fact({ fact, setFacts }) {
 
   async function handelVote() {
-    const {data: updatedFact, error} = await supabase.from('facts').update({votesInteresting: fact.votesInteresting +1}).eq("id", fact.id)
+    const {data: updatedFact, error} = await supabase.from('facts').update({votesInteresting: fact.votesInteresting +1})
+    .eq("id", fact.id)
     .select();
+
+    console.log(updatedFact);
+    if(!error) setFacts((facts)=>facts.map((f)=>(f.id ===fact.id ? updatedFact[0] : f ))
+    );
   }
 
   return (
@@ -263,7 +268,7 @@ function Fact({ fact }) {
       {fact.text}
       <a className="source" href={fact.source} target="_blank">(Source)</a> 
   </p>
-  <span className="tag" style={{backgroundColor: CATEGORIES.find((cat) => cat.name === fact.category).color}}>{fact.category}</span>
+  <span className="tag" style={{backgroundColor: CATEGORIES.find((cat) => cat.name === fact.category).color,}}>{fact.category}</span>
   <div className="vote-buttons">
       <button onClick={handelVote}>👍 {fact.votesInteresting}</button>
       <button>🤯 {fact.votesMindblowing}</button>
