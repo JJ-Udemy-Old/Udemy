@@ -190,7 +190,7 @@ function NewFactForm({setFacts, setShowForm}) {
     onChange={(e) => setText(e.target.value)}
   />
   <span>{200-textLength}</span>
-  <input type="source" placeholder="Trustworthy spurce..."  onChange={(e)=>setSource(e.target.value)} disabled={isUploading} />
+  <input type="source" placeholder="Link Here..."  onChange={(e)=>setSource(e.target.value)} disabled={isUploading} />
   <select value={category} onChange={(e)=>setCategory(e.target.value)} disabled={isUploading}>
       <option value="">Choose Category:</option>
       {CATEGORIES.map((cat) =>( 
